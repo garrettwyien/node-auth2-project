@@ -1,4 +1,4 @@
-const { default: jwtDecode } = require("jwt-decode");
+const jwt = require('jsonwebtoken');
 const { JWT_SECRET } = require("../secrets"); // use this secret!
 const Users = require('../users/users-model');
 
@@ -8,7 +8,7 @@ const restricted = (req, res, next) => {
     status: 401, message: 'Token required'
   })
 
-  jwtDecode.verify(
+  jwt.verify(
     token,
     JWT_SECRET,
     (err, decoded) => {
@@ -91,6 +91,7 @@ const validateRoleName = (req, res, next) => {
     next({ status: 422, message: "Role name can not be longer than 32 chars"})
   } else {
     req.role_name = role_name.trim()
+    next()
   }
   /*
     If the role_name in the body is valid, set req.role_name to be the trimmed string and proceed.
